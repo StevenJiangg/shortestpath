@@ -1,0 +1,24 @@
+.circle{
+    background: none;
+    padding: 10px 12px;
+}
+
+
+.circleSelected{
+    background-color:rgb(172, 104, 104) !important;
+    padding: 10px 12px;
+}
+
+.highlightedPath{
+    background-color:rgb(243, 150, 113) ;
+    padding: 10px 12px;
+}
+
+.toggle{
+    background-color:rgb(105, 172, 150) ;
+    padding: 10px 12px;
+}
+.test{
+    background-color:rgb(105, 172, 150) ;
+    padding: 10px 12px;
+}

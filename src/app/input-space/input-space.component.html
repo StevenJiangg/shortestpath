@@ -1,0 +1,23 @@
+<div>
+    <input type="number" [(ngModel)]="inputNumber">
+    <!-- <input type="submit" value="Submit"> -->
+    <button  (click) = "fillPath(storeIndex[0], storeIndex[1]) ">FIND</button>
+    <table class= "table">
+        <tr *ngFor='let board of generateBoard(inputNumber);let i = index' >
+            <th *ngFor = 'let box of board; let j = index' >
+                    <button [ngClass]="{'toggle': storeIndex[0].iIndex == i && storeIndex[0].jIndex == j, 
+                                        'circleSelected': storeIndex[1].iIndex == i && storeIndex[1].jIndex == j, 
+                                        'circle': clicked,
+                                        'highlightedPath': testingFunction(i, j)
+                                        
+                                        }"  
+                                        
+                                        (click) = "checkPath(i, j)"
+                                        >
+                        {{box}}
+                    </button>
+            </th>
+        </tr>
+    </table>
+</div>
+
