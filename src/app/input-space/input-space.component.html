@@ -1,21 +1,74 @@
 <div>
+    <div class = "align">
     <input type="number" [(ngModel)]="inputNumber">
     <!-- <input type="submit" value="Submit"> -->
-    <button  (click) = "fillPath(storeIndex[0], storeIndex[1]) ">FIND</button>
-    <table class= "table">
+    
+        <button  (click) = "fillPath(startingPoint, endingPoint)" [disabled]="disableButton">FIND SHORTEST PATH</button>
+        <button  (click)="toggleConditions=1"> ADD BLOCKS</button>
+        <button  (click) = "toggleConditions=2">CHANGE START POINT</button>
+        <button  (click) = "toggleConditions=3">CHANGE END POINT</button>
+        <button (click) = "clear()">CLEAR</button>
+        
+    </div>
+    <table class= "table" >
         <tr *ngFor='let board of generateBoard(inputNumber);let i = index' >
-            <th *ngFor = 'let box of board; let j = index' >
-                    <button [ngClass]="{'toggle': storeIndex[0].iIndex == i && storeIndex[0].jIndex == j, 
-                                        'circleSelected': storeIndex[1].iIndex == i && storeIndex[1].jIndex == j, 
-                                        'circle': clicked,
-                                        'highlightedPath': testingFunction(i, j)
-                                        
-                                        }"  
-                                        
-                                        (click) = "checkPath(i, j)"
-                                        >
-                        {{box}}
-                    </button>
+            <th *ngFor = 'let box of board; let j = index'
+            
+            >
+                <div [ngSwitch]="toggleConditions">
+                    <div *ngSwitchDefault>
+                        <button [ngClass]="{'starting': startingPoint.iIndex == i && startingPoint.jIndex == j, 
+                                            'ending': endingPoint.iIndex == i && endingPoint.jIndex == j, 
+                                            'square': clicked,
+                                            'highlightedPath': highlight(i, j),
+                                            'none': checkAddedBlocks(i,j)
+                                            }"  
+                                            >
+        
+                        </button>   
+                    </div>
+                    <div *ngSwitchCase="1">
+                        <button [ngClass]="{'starting': startingPoint.iIndex == i && startingPoint.jIndex == j, 
+                                            'ending': endingPoint.iIndex == i && endingPoint.jIndex == j, 
+                                            'square': clicked,
+                                            'highlightedPath': highlight(i, j),
+                                            'none': checkAddedBlocks(i,j)
+                                            }"  
+                                            
+                                            (mousedown) = "mousedown(i, j)"
+                                            (mouseleave) = "mouseover(i, j)"
+                                            (mouseup) = "mouseup(i,j)"
+                                            >
+        
+                        </button>   
+                    </div>
+                    <div *ngSwitchCase="2">
+                        <button [ngClass]="{'starting': startingPoint.iIndex == i && startingPoint.jIndex == j, 
+                                            'ending': endingPoint.iIndex == i && endingPoint.jIndex == j, 
+                                            'square': clicked,
+                                            'highlightedPath': highlight(i, j),
+                                            'none': checkAddedBlocks(i,j)
+                                            }"  
+                                            (mousedown) = "changeStart(i, j)"
+                                            >
+        
+                        </button>   
+                    </div>
+                    <div *ngSwitchCase="3">
+                        <button [ngClass]="{'starting': startingPoint.iIndex == i && startingPoint.jIndex == j, 
+                                            'ending': endingPoint.iIndex == i && endingPoint.jIndex == j, 
+                                            'square': clicked,
+                                            'highlightedPath': highlight(i, j),
+                                            'none': checkAddedBlocks(i,j)
+                                            }"  
+                                            (mousedown) = "changeEnd(i, j)"
+                                            
+                                            >
+        
+                        </button>   
+                    </div>
+            </div>
+
             </th>
         </tr>
     </table>
