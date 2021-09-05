@@ -8,9 +8,9 @@ import { Component, OnInit, Query } from '@angular/core';
 })
 export class InputSpaceComponent implements OnInit {
 
-  clicked = true;
   inputNumber: number = 9;
-  toggle:boolean = false;
+
+  // the source and the target
   startingPoint = {
     iIndex : 0, 
     jIndex: 0,
@@ -20,20 +20,35 @@ export class InputSpaceComponent implements OnInit {
     jIndex: this.inputNumber-1,
   }
 
+  // arrays and variables for triggering ngclass
   highlightPath = new Array();
   blockArray = new Array();
+  clicked = true;
+  down: boolean = false
 
+  // conditions for buttons
   blockCondition = true;
   startCond = false;
   endCond = false;
   toggleConditions: any;
   disableButton = false;
+
   
   constructor() { }
 
   ngOnInit(): void {
   }
 
+  // checks and updates inputed board size
+  updateInput(value: any){
+    if(Number(value) > 30){
+      alert("Value is too large! Enter a value between 0 and 30");
+      return;
+    }
+    this.inputNumber = Number(value);
+  }
+
+  // generates all the squares
   generateBoard(input: number){
     var boardArray = new Array();
     var tempArray = new Array();
@@ -47,13 +62,7 @@ export class InputSpaceComponent implements OnInit {
     return boardArray;
   }
 
-  change(){
-    this.toggle = !this.toggle;
-  }
-
-  log(e: any){
-    console.log(e)
-  }
+  // graph
   graph(){
     var vertices = new Array();
     for(var iIndex = 0; iIndex < this.inputNumber; iIndex++){
@@ -64,6 +73,7 @@ export class InputSpaceComponent implements OnInit {
     return vertices;
   }
   
+  // returns an array of all neighbors of a point (square)
   currentEdges(x: number, y: number){
     var edges = new Array();
     var top = x-1;
@@ -118,6 +128,7 @@ export class InputSpaceComponent implements OnInit {
     return edges;
   }
 
+  // dijkstras algorithm
   findPath(source: any, point2: any){
     this.highlightPath = new Array();
     var dist = new Array();
@@ -131,10 +142,6 @@ export class InputSpaceComponent implements OnInit {
       console.log("FOUND");
       return {dist, prev};
     }
-
-    //console.log(source.iIndex, source.jIndex);
-    //console.log(point2.iIndex, point2.jIndex);
-    //console.log("blockage",this.blockArray);
 
     for(var i = 0; i < Graph.length; i++){
       dist[i] = Infinity;
@@ -164,7 +171,6 @@ export class InputSpaceComponent implements OnInit {
         vertex = Q.findIndex(isLargeNumber);
       }
       
-
       Q.splice(vertex, 1);
       
       var neighborVertex;
@@ -180,8 +186,6 @@ export class InputSpaceComponent implements OnInit {
         }
       }
     }
-    //console.log("dist", dist);
-    //console.log("prev", prev);
     return {dist, prev};
   }
 
@@ -231,8 +235,7 @@ export class InputSpaceComponent implements OnInit {
   fillPath(source:any, target:any){
     var infoObj = this.findPath(source, target);
     var prevHolder = infoObj.prev;
-    var distHolder = infoObj.dist;
-
+    //var distHolder = infoObj.dist;
     var targetVert = this.convertToVertices(target)
     var sourceVert = this.convertToVertices(source)
     var index = prevHolder[targetVert];
@@ -326,9 +329,6 @@ export class InputSpaceComponent implements OnInit {
     }
     return false;
   }
-
-
-  down: boolean = false
 
   mousedown(i: any, j: any) {
     this.down = true
