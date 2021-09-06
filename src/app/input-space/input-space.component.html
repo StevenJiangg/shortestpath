@@ -1,9 +1,13 @@
 <div>
     <div class = "align">
-    <input type="number" max = "25" #inputVal>
-    <input type="submit" (click) =updateInput(inputVal.value)>
+        <div class = "align"> 
+            Enter a value to change grid size, N x N Grid Size
+        </div>
+    <input type="number" placeholder = "Enter a value" max = "20" #inputVal>
+    <input type="submit" value="Update Grid Size" (click) =updateInput(inputVal.value)>
     <!-- <input type="submit" value="Submit"> -->
-    
+    <br>
+    <br>
         <button  (click) = "fillPath(startingPoint, endingPoint)" [disabled]="disableButton">FIND SHORTEST PATH</button>
         <button  (click)="toggleConditions=1"> ADD BLOCKS</button>
         <button  (click) = "toggleConditions=2">CHANGE START POINT</button>
@@ -20,6 +24,8 @@
                                             'ending': endingPoint.iIndex == i && endingPoint.jIndex == j, 
                                             'square': clicked,
                                             'highlightedPath': highlight(i, j),
+                                            'path' : path(i, j),
+                                            'outerEdges': edgePath(i, j),
                                             'none': checkAddedBlocks(i,j)
                                             }"  
                                             >
@@ -30,6 +36,8 @@
                                             'ending': endingPoint.iIndex == i && endingPoint.jIndex == j, 
                                             'square': clicked,
                                             'highlightedPath': highlight(i, j),
+                                            'path' : path(i, j),
+                                            'outerEdges': edgePath(i, j),
                                             'none': checkAddedBlocks(i,j)
                                             }"  
                                             
@@ -44,6 +52,8 @@
                                             'ending': endingPoint.iIndex == i && endingPoint.jIndex == j, 
                                             'square': clicked,
                                             'highlightedPath': highlight(i, j),
+                                            'path' : path(i, j),
+                                            'outerEdges': edgePath(i, j),
                                             'none': checkAddedBlocks(i,j)
                                             }"  
                                             (mousedown) = "changeStart(i, j)"
@@ -55,6 +65,8 @@
                                             'ending': endingPoint.iIndex == i && endingPoint.jIndex == j, 
                                             'square': clicked,
                                             'highlightedPath': highlight(i, j),
+                                            'path' : path(i, j),
+                                            'outerEdges': edgePath(i, j),
                                             'none': checkAddedBlocks(i,j)
                                             }"  
                                             (mousedown) = "changeEnd(i, j)"

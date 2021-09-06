@@ -18,15 +18,18 @@
 }
 
 .highlightedPath{
-    background-color:rgb(243, 150, 113) !important;
-    padding: 16px 16px;
+    background-color:rgb(243, 150, 113)
 }
 
 .none{
     background-color:rgb(0, 0, 0) ;
     padding: 16px 16px;
 }
-.testing{
+.outerEdges{
+    background-color:rgb(224, 88, 88);
+    padding: 16px 16px;
+}
+.path{
     background-color:rgb(95, 212, 148) ;
     padding: 16px 16px;
 }

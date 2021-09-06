@@ -25,7 +25,8 @@ export class InputSpaceComponent implements OnInit {
   blockArray = new Array();
   clicked = true;
   down: boolean = false
-
+  outerEdges = new Array();
+  motionPath = new Array();
   // conditions for buttons
   blockCondition = true;
   startCond = false;
@@ -41,8 +42,8 @@ export class InputSpaceComponent implements OnInit {
 
   // checks and updates inputed board size
   updateInput(value: any){
-    if(Number(value) > 30){
-      alert("Value is too large! Enter a value between 0 and 30");
+    if(Number(value) > 20){
+      alert("Value is too large! Enter a value between 0 and 20");
       return;
     }
     this.inputNumber = Number(value);
@@ -129,7 +130,7 @@ export class InputSpaceComponent implements OnInit {
   }
 
   // dijkstras algorithm
-  findPath(source: any, point2: any){
+  async findPath(source: any, point2: any){
     this.highlightPath = new Array();
     var dist = new Array();
     var prev = new Array();
@@ -159,6 +160,7 @@ export class InputSpaceComponent implements OnInit {
     }
 
     while(Q.length > 0 ){
+      
       sDistVertex = this.smallestDist(dist, Q); 
       neighborsOfSmallestVertex =  this.currentEdges(Graph[sDistVertex].iIndex,Graph[sDistVertex].jIndex )
       if(sDistVertex=== this.convertToVertices(point2) ){
@@ -172,8 +174,12 @@ export class InputSpaceComponent implements OnInit {
       }
       
       Q.splice(vertex, 1);
+      await this.load();
       
       var neighborVertex;
+      /*this.outerEdges = [];
+        this.outerEdges.push(neighborsOfSmallestVertex[i])
+      }*/
       for(var i = 0; i < neighborsOfSmallestVertex.length; i++){
         alt  = dist[sDistVertex] + 1; // all neighbors have edge cost of 1 to its previous nodes so its (+1)
         neighborVertex = this.convertToVertices(neighborsOfSmallestVertex[i])
@@ -183,10 +189,18 @@ export class InputSpaceComponent implements OnInit {
         if(alt < dist[neighborVertex]){
           dist[neighborVertex] = alt;
           prev[neighborVertex] = sDistVertex;
+          this.highlightPath.push(neighborsOfSmallestVertex[i])
         }
       }
     }
     return {dist, prev};
+  }
+
+  // Returns a Promise that resolves after "ms" Milliseconds
+  timer = (ms: number) => new Promise(res => setTimeout(res, ms))
+
+  async load () { // We need to wrap the loop into an async function for this to work
+    await this.timer(10); // then the created Promise can be awaited
   }
 
   convertToVertices(pairs: any){
@@ -232,23 +246,26 @@ export class InputSpaceComponent implements OnInit {
     return vertex ;
   }
 
-  fillPath(source:any, target:any){
+  
+  async fillPath(source:any, target:any){
+    this.highlightPath = [];
+    this.motionPath = [];
     var infoObj = this.findPath(source, target);
-    var prevHolder = infoObj.prev;
+    var prevHolder = (await infoObj).prev;
     //var distHolder = infoObj.dist;
     var targetVert = this.convertToVertices(target)
     var sourceVert = this.convertToVertices(source)
     var index = prevHolder[targetVert];
     var maxLoop = this.inputNumber *this.inputNumber;
     while(index !== sourceVert){
-      this.highlightPath.push(this.convertToObject(index))
+      this.motionPath.push(this.convertToObject(index))
       index = prevHolder[index];
-      if(this.highlightPath.length > maxLoop){
+      if(this.motionPath.length > maxLoop){
         break;
       }
     }
     if(index !== sourceVert){
-      this.highlightPath = [];
+      this.motionPath = [];
       alert("CANNOT FIND TARGET")
     }
   }
@@ -265,6 +282,7 @@ export class InputSpaceComponent implements OnInit {
   }
 
   changeStart(i : any, j : any){
+    this.motionPath = [];
     this.highlightPath = new Array();
     if( i == this.endingPoint.iIndex && j == this.endingPoint.jIndex){
       this.disableButton = true;
@@ -279,6 +297,7 @@ export class InputSpaceComponent implements OnInit {
     }
   }
   changeEnd(i : any, j : any){
+    this.motionPath = [];
     this.highlightPath = new Array();
     if( i == this.startingPoint.iIndex && j == this.startingPoint.jIndex){
       this.disableButton = true;
@@ -294,6 +313,7 @@ export class InputSpaceComponent implements OnInit {
   }
 
   addBlocks(m: any, n: any){
+    this.motionPath = [];
     this.highlightPath = new Array();
     var boxIndex  = {
       iIndex: m, 
@@ -330,6 +350,26 @@ export class InputSpaceComponent implements OnInit {
     return false;
   }
 
+  path(m: any, n: any){
+    var checkVert = this.motionPath;
+    for(var i = 0; i < checkVert.length; i++){
+      if(checkVert[i].iIndex == m && checkVert[i].jIndex == n){
+        return true;
+      }
+    }
+    return false;
+  }
+
+  edgePath(m: any, n: any){
+    var checkVert = this.outerEdges;
+    for(var i = 0; i < checkVert.length; i++){
+      if(checkVert[i].iIndex == m && checkVert[i].jIndex == n){
+        return true;
+      }
+    }
+    return false;
+  }
+
   mousedown(i: any, j: any) {
     this.down = true
   }
@@ -348,6 +388,7 @@ export class InputSpaceComponent implements OnInit {
   clear(){
     this.highlightPath = [];
     this.blockArray = [];
+    this.motionPath = [];
   }
 
 }
